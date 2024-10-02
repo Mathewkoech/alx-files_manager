@@ -116,3 +116,5 @@ class FileController {
     return null;
   }
 }
+
+export default FileController
