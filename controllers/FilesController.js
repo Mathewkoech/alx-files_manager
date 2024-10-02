@@ -115,7 +115,6 @@ class FilesController {
     }
     return null;
   }
-
   // retrieves doc based on the id
 
   static async getShow(req, res) {
@@ -125,7 +124,7 @@ class FilesController {
     }
     const fileId = req.params.id
     const files = dbClient.db.collection("files")
-    const idObject = ObjectId(fileId)
+    const idObject = new ObjectId(fileId)
     const file = await files.findOne({ _id: idObject, userId: user._id })
     if (!file) {
       return res.status(404).json({ error: "Not found" })
@@ -182,7 +181,46 @@ class FilesController {
     return null;
   }
 
+  static async putPublish(req, res) {
+    const user = await FilesController.getUser(req);
+    if (!user) {
+      return response.status(401).json({ error: 'Unauthorized' });
+    }
+    const { id } = req.params
+    const files = dbClient.db.collection("files")
+    const idObject = new ObjectId(id)
+    const newValue = { $set: { isPublic: true } }
+    const options = { returnOriginal: false }
 
+    console.log("userId", user._id)
+    console.log("idObjext", idObject)
+    const file = await files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options)
+    console.log("new file is", file.ok)
+    if (!file.lastErrorObject.updatedExisting) {
+      return res.status(404).json({ error: 'Not found' });
+    }
+    console.log("made it to here", file._id)
+    return res.status(200).json(file.value);
+  }
+
+  static async putUnpublish(req, res) {
+    const user = await FilesController.getUser(request);
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const { id } = req.params;
+    const files = dbClient.db.collection('files');
+    const idObject = new ObjectId(id);
+    const newValue = { $set: { isPublic: false } };
+    const options = { returnOriginal: false };
+    files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options, (err, file) => {
+      if (!file.lastErrorObject.updatedExisting) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      return res.status(200).json(file.value);
+    });
+    return null;
+  }
 }
 
 export default FilesController;

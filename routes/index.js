@@ -54,7 +54,7 @@ router.get('/connect', async (req, res) => {
 });
 
 // route to show qtn 6:route 1
-router.get("/files:id", async (req, res) => {
+router.get("/files/:id", async (req, res) => {
   try {
     await FilesController.getShow(req, res)
   } catch (error) {
@@ -66,6 +66,23 @@ router.get("/files:id", async (req, res) => {
 // route to index Question 6: route 2
 router.get('/files', FilesController.getIndex);
 
+// route for question 7: route 1
+router.get("/files/:id/publish", async (req, res) => {
+  try {
+    await FilesController.putPublish(req, res)
+  } catch (error) {
+    console.log("error for files id", error)
+  }
+})
+
+// route for question 7: route 1
+router.get("/files/:id/publish", async (req, res) => {
+  try {
+    await FilesController.putUnpublish(req, res)
+  } catch (error) {
+    console.log("error for files id", error)
+  }
+})
 
 // Export the router
 export default router;
