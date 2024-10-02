@@ -1,6 +1,6 @@
 import sha1 from 'sha1';
 import redisClient from '../utils/redis';
-import { dbClient, ObjectId } from '../utils/db';
+import dbClient, { ObjectId } from '../utils/db';
 
 /**
  * Controller for user-related operations.
@@ -48,6 +48,9 @@ class UsersController {
     const userId = await redisClient.get(key);
     if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
+    }
+    if (!dbClient.db) {
+      return res.status(500).send({ error: "Database not connected" })
     }
     const user = await dbClient.db.collection('users').findOne({ _id: ObjectId(userId) });
 

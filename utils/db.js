@@ -22,6 +22,16 @@ class DBClient {
     this.db = this.client.db(database);
   }
 
+  async init() {
+    try {
+      await this.client.connect()
+      this.db = this.client.db(process.env.DB_DATABASE || 'files_manager')
+      console.log("Connexted to the database")
+    } catch (error) {
+      console.log("Database connection error", error)
+    }
+  }
+
   /**
    * Check if the connection is alive
    *
@@ -70,6 +80,6 @@ class DBClient {
   }
 }
 
-const dbClient = new DBClient();
+const dbClient = new DBClient()
 
-module.exports = dbClient;
+export default dbClient;
