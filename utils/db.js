@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
 // Implement a class DBClient that will be used to interact with the MongoDB database
-import dotenv from 'dotenv';
-import { MongoClient, ObjectId as MongoObjectId } from 'mongodb';
 
-dotenv.config();
+const { MongoClient } = require('mongodb');
+
 /**
  * Class DBClient
  */
@@ -73,4 +72,4 @@ class DBClient {
 
 const dbClient = new DBClient();
 
-export { dbClient, MongoObjectId as ObjectId };
+module.exports = dbClient;
