@@ -72,5 +72,5 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
-dbClient.connect();
+
 export { dbClient, MongoObjectId as ObjectId };
