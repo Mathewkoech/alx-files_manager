@@ -1,54 +1,3 @@
-<<<<<<< HEAD
-import { Router } from "express";
-import AppController from "../controllers/AppController";
-import UsersController from '../controllers/UsersController';
-import AuthController from '../controllers/AuthController';
-import FilesController from '../controllers/FilesController';
-
-
-const router = Router();
-
-router.get("/status", async (req, res) => AppController.getStatus(req, res));
-
-router.get("/stats", async (req, res) => AppController.getStats(req, res));
-
-router.post("/files", async (req, res) => FilesController.postUpload(req, res));
-
-
-/**
- * Route to post new user.
- * @name POST /users
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-router.post('/users', async (req, res) => UsersController.postNew(req, res));
-
-/**
- * Route to connect a user.
- * @name GET /connect
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-router.get('/connect', async (req, res) => AuthController.getConnect(req, res));
-
-/**
- * Route to disconnect a user.
- * @name GET /disconnect
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-router.get('/disconnect', async (req, res) => AuthController.getDisconnect(req, res));
-
-/**
- * Route to get the authenticated user's information.
- * @name GET /users/me
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-router.get('/users/me', async (req, res) => UsersController.getMe(req, res));
-
-export default router;
-=======
 import { Router } from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
@@ -102,6 +51,23 @@ router.get('/connect', async (req, res) => {
   }
 });
 
+// route to show qtn 6:route 1
+router.get("/files:id", async(req, res) => {
+  try {
+    await FileController.getShow(req, res)
+  } catch (error) {
+    res.status(500).json({error: "Internal server Error"})
+  }
+})
+
+// route to index Question 6: route 2
+router.get("/files", async(req, res) => {
+  try {
+    await FileController.getIndex(req, res)
+  } catch (error) {
+    res.status(500).json({error: "Internal server Error"})
+  }
+})
+
 // Export the router
 export default router;
->>>>>>> 7dfa3cc4d2c6c64da9febce23bd82857d00b8914
