@@ -1,4 +1,7 @@
 # Logs
+redis-6.0.10.tar.gz
+redis-6.0.10
+node_modules
 logs
 *.log
 npm-debug.log*
