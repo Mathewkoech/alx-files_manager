@@ -192,10 +192,7 @@ class FilesController {
     const newValue = { $set: { isPublic: true } }
     const options = { returnOriginal: false }
 
-    console.log("userId", user._id)
-    console.log("idObjext", idObject)
     const file = await files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options)
-    console.log("new file is", file.ok)
     if (!file.lastErrorObject.updatedExisting) {
       return res.status(404).json({ error: 'Not found' });
     }
@@ -221,6 +218,62 @@ class FilesController {
     });
     return null;
   }
+
+  static async getFile(request, response) {
+    const { id } = request.params;
+    const files = dbClient.db.collection('files');
+    const idObject = new ObjectId(id);
+    files.findOne({ _id: idObject }, async (err, file) => {
+      if (!file) {
+        return response.status(404).json({ error: 'Not found' });
+      }
+      console.log(file.localPath);
+      if (file.isPublic) {
+        if (file.type === 'folder') {
+          return response.status(400).json({ error: "A folder doesn't have content" });
+        }
+        try {
+          let fileName = file.localPath;
+          const size = request.param('size');
+          if (size) {
+            fileName = `${file.localPath}_${size}`;
+          }
+          const data = await fs.readFile(fileName);
+          const contentType = mime.contentType(file.name);
+          return response.header('Content-Type', contentType).status(200).send(data);
+        } catch (error) {
+          console.log(error);
+          return response.status(404).json({ error: 'Not found' });
+        }
+      } else {
+        const user = await FilesController.getUser(request);
+        if (!user) {
+          return response.status(404).json({ error: 'Not found' });
+        }
+        if (file.userId.toString() === user._id.toString()) {
+          if (file.type === 'folder') {
+            return response.status(400).json({ error: "A folder doesn't have content" });
+          }
+          try {
+            let fileName = file.localPath;
+            const size = request.param('size');
+            if (size) {
+              fileName = `${file.localPath}_${size}`;
+            }
+            const contentType = mime.contentType(file.name);
+            return response.header('Content-Type', contentType).status(200).sendFile(fileName);
+          } catch (error) {
+            console.log(error);
+            return response.status(404).json({ error: 'Not found' });
+          }
+        } else {
+          console.log(`Wrong user: file.userId=${file.userId}; userId=${user._id}`);
+          return response.status(404).json({ error: 'Not found' });
+        }
+      }
+    });
+  }
+
 }
 
 export default FilesController;

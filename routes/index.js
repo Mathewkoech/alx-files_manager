@@ -63,11 +63,29 @@ router.get("/files/:id", async (req, res) => {
   }
 })
 
-// route to index Question 6: route 2
-router.get('/files', FilesController.getIndex);
+// Question 6 get files
+
+router.post("/files", async (req, res) => {
+  try {
+    await FilesController.postUpload(req, res)
+  } catch (error) {
+    // console.log("File id: ", error)
+    res.status(500).json({ error: "Internal server Error" })
+  }
+})
+
+router.get("/files", async (req, res) => {
+  try {
+    await FilesController.getIndex(req, res)
+  } catch (error) {
+    // console.log("File id: ", error)
+    res.status(500).json({ error: "Internal server Error" })
+  }
+})
+
 
 // route for question 7: route 1
-router.get("/files/:id/publish", async (req, res) => {
+router.put("/files/:id/publish", async (req, res) => {
   try {
     await FilesController.putPublish(req, res)
   } catch (error) {
@@ -75,14 +93,24 @@ router.get("/files/:id/publish", async (req, res) => {
   }
 })
 
-// route for question 7: route 1
-router.get("/files/:id/publish", async (req, res) => {
+// route for question 7: route 2
+router.put("/files/:id/unpublish", async (req, res) => {
   try {
     await FilesController.putUnpublish(req, res)
   } catch (error) {
     console.log("error for files id", error)
   }
 })
+
+// route for question 8: route 1
+router.get("/files/:id/data", async (req, res) => {
+  try {
+    await FilesController.getFile(req, res)
+  } catch (error) {
+    console.log("error for files id", error)
+  }
+})
+
 
 // Export the router
 export default router;
