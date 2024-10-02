@@ -4,7 +4,7 @@
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
-export class AppController {
+class AppController {
   /**
    * Checks the status of the API.
    * @param {Object} req - The request object.
