@@ -1,8 +1,8 @@
 /**
  * AppController representing the controller for the application.
  */
-import redisClient from "../utils/redis";
-import dbClient from "../utils/db";
+import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
 export class AppController {
   /**
@@ -35,7 +35,9 @@ export class AppController {
 
       res.status(200).send({ users: nbUsers, files: nbFiles });
     } catch (error) {
-      res.status(500).send("Cannot get the stats");
+      res.status(500).send('Cannot get the stats');
     }
   }
 }
+
+export default AppController;
